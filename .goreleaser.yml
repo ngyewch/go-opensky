@@ -1,0 +1,35 @@
+version: 2
+project_name: go-opensky
+before:
+  hooks:
+    - go generate ./...
+    - go mod tidy
+builds:
+  - id: opensky
+    binary: opensky
+    dir: tools/cli
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{ if index .Env "VERSION" }}{{ .Env.VERSION }}{{ else }}{{ .Version }}{{ end }}
+archives:
+  - id: opensky
+    name_template: 'opensky_{{ if index .Env "VERSION" }}{{ .Env.VERSION }}{{ else }}{{ .Version }}{{ end }}_{{ .Os }}_{{ .Arch }}'
+    ids:
+      - opensky
+    formats:
+      - zip
+checksum:
+  name_template: 'checksums.txt'
+changelog:
+  disable: true
+release:
+  disable: false

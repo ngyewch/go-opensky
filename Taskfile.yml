@@ -1,0 +1,29 @@
+version: 3
+
+tasks:
+  clean:
+    desc: Clean
+    cmds:
+      - rm -rf dist
+
+  build:
+    desc: Build
+    cmds:
+      - goreleaser --snapshot --clean
+
+  test:
+    desc: Test
+    cmds:
+      - go test -v ./...
+
+  dependencyUpdates:
+    desc: Show dependency updates
+    aliases: [ outdated ]
+    cmds:
+      - go mod download
+      - go mod tidy
+      - go list -u -m -json all | go-mod-outdated -update -direct
+
+  mingo:
+    cmds:
+      - mingo -tests -v
