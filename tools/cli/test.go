@@ -5,14 +5,15 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ngyewch/go-opensky"
 	"github.com/urfave/cli/v3"
 )
 
-func newClient(ctx context.Context, cmd *cli.Command) *Client {
+func newClient(ctx context.Context, cmd *cli.Command) *opensky.Client {
 	clientId := cmd.String(clientIdFlag.Name)
 	clientSecret := cmd.String(clientSecretFlag.Name)
 
-	return NewClient(clientId, clientSecret, nil)
+	return opensky.NewClient(clientId, clientSecret, nil)
 }
 
 func doTest(ctx context.Context, cmd *cli.Command) error {
@@ -25,7 +26,7 @@ func doTest(ctx context.Context, cmd *cli.Command) error {
 		maxLon = 104.131
 	)
 
-	allStatesResponse, err := client.GetAllStates(AllStatesRequest{
+	allStatesResponse, err := client.GetAllStates(opensky.AllStatesRequest{
 		Extended: true,
 		MinLat:   minLat,
 		MinLon:   minLon,

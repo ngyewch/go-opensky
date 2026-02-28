@@ -1,4 +1,4 @@
-package main
+package opensky
 
 import (
 	"encoding/csv"
