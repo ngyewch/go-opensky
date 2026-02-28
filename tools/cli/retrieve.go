@@ -9,25 +9,24 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func newClient(ctx context.Context, cmd *cli.Command) *opensky.Client {
-	clientId := cmd.String(clientIdFlag.Name)
-	clientSecret := cmd.String(clientSecretFlag.Name)
+const (
+	sgMinLat = 1.129
+	sgMinLon = 103.557
+	sgMaxLat = 1.493
+	sgMaxLon = 104.131
+)
 
-	return opensky.NewClient(clientId, clientSecret, nil)
-}
+func doRetrieve(ctx context.Context, cmd *cli.Command) error {
+	extended := cmd.Bool(extendedFlag.Name)
+	minLat := cmd.Float64(minLatFlag.Name)
+	minLon := cmd.Float64(minLonFlag.Name)
+	maxLat := cmd.Float64(maxLatFlag.Name)
+	maxLon := cmd.Float64(maxLonFlag.Name)
 
-func doTest(ctx context.Context, cmd *cli.Command) error {
 	client := newClient(ctx, cmd)
 
-	const (
-		minLat = 1.129
-		minLon = 103.557
-		maxLat = 1.493
-		maxLon = 104.131
-	)
-
 	allStatesResponse, err := client.GetAllStates(opensky.AllStatesRequest{
-		Extended: true,
+		Extended: extended,
 		MinLat:   minLat,
 		MinLon:   minLon,
 		MaxLat:   maxLat,
